@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RecruitX • Professional Network UI</title>
+  <style>
+    :root{
+      --bg: #0b0c10;
+      --card: #12141a;
+      --muted: #9aa4b2;
+      --text: #e6ebf2;
+      --accent: #4f8cff;
+      --accent-2:#6ee7b7;
+      --line: #1f2430;
+      --danger:#ff5d5d;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(180deg, #0a0c12 0%, #0b0c10 100%);
+      color:var(--text);
+    }
+    a{color:inherit; text-decoration:none}
+    .container{max-width:1200px; margin:0 auto; padding:16px}
+
+    /* Header */
+    header{
+      position: sticky; top:0; z-index:50;
+      background: rgba(10,12,18,.8); backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      display:flex; align-items:center; gap:12px; padding:12px 16px;
+    }
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px}
+    .brand .logo{width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,var(--accent),#9b8cff); display:grid; place-items:center; box-shadow:var(--shadow)}
+    .brand span{font-size:18px}
+
+    .search{flex:1; position:relative}
+    .search input{
+      width:100%; border:1px solid var(--line); background:#0f1218; color:var(--text);
+      border-radius:999px; padding:10px 40px; outline:none;
+    }
+    .search svg{position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.7}
+
+    .nav-actions{display:flex; gap:8px}
+    .icon-btn{
+      width:40px; height:40px; display:grid; place-items:center; border-radius:12px;
+      background:#0f1218; border:1px solid var(--line); cursor:pointer;
+    }
+    .icon-btn:hover{border-color:#2a3140}
+
+    /* Layout */
+    .grid{
+      display:grid; gap:16px; grid-template-columns: 260px 1fr 320px;
+      padding:16px;
+    }
+    @media (max-width: 1100px){ .grid{ grid-template-columns: 240px 1fr; } .right{ display:none } }
+    @media (max-width: 780px){ .grid{ grid-template-columns: 1fr; } .left{ order:2 } .main{ order:1 } }
+
+    /* Cards */
+    .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .card.pad{padding:16px}
+    .divider{height:1px; background:var(--line); margin:12px 0}
+
+    /* Left column */
+    .profile{display:flex; flex-direction:column; gap:12px}
+    .cover{height:76px; border-radius:12px; background:linear-gradient(135deg,#2131ff33,#6ee7b733)}
+    .avatar{display:flex; align-items:center; gap:12px}
+    .avatar .img{width:56px; height:56px; border-radius:14px; background:#181c24; display:grid; place-items:center; font-weight:700}
+    .meta{display:flex; flex-direction:column}
+    .meta .name{font-weight:700}
+    .meta .title{color:var(--muted); font-size:14px}
+    .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+    .stat{background:#0f1218; border:1px solid var(--line); border-radius:12px; padding:10px; text-align:center}
+    .stat .num{font-weight:800}
+
+    /* Create post */
+    .composer{display:flex; gap:12px; align-items:flex-start}
+    .composer textarea{
+      flex:1; min-height:56px; resize:vertical; max-height:240px;
+      border-radius:12px; border:1px solid var(--line); background:#0f1218; color:var(--text);
+      padding:12px; outline:none;
+    }
+    .composer-actions{display:flex; gap:8px; align-items:center; justify-content:flex-end}
+    .btn{
+      border:1px solid var(--line); background:#121620; color:var(--text);
+      padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:600;
+    }
+    .btn.primary{background:linear-gradient(135deg,var(--accent),#9b8cff); border-color:transparent}
+    .btn.ghost{background:#0f1218}
+
+    /* Feed */
+    .feed{display:flex; flex-direction:column; gap:16px}
+    .post{padding:16px}
+    .post-header{display:flex; gap:12px; align-items:center}
+    .post-avatar{width:44px; height:44px; border-radius:12px; background:#181c24; display:grid; place-items:center; font-weight:700}
+    .post-meta{flex:1}
+    .post-meta .who{font-weight:700}
+    .post-meta .when{color:var(--muted); font-size:13px}
+    .post-body{margin-top:10px; line-height:1.6}
+    .post-image{margin-top:10px; overflow:hidden; border-radius:12px; border:1px solid var(--line)}
+    .post-image img{width:100%; display:block}
+    .post-actions{display:flex; gap:8px; margin-top:12px}
+    .chip{
+      display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
+      background:#0f1218; border:1px solid var(--line); cursor:pointer; font-size:14px;
+    }
+    .chip[data-active="true"]{outline:2px solid #2a3350}
+
+    .comments{margin-top:12px; border-top:1px dashed var(--line); padding-top:10px; display:none}
+    .comment{display:flex; gap:10px; padding:8px 0}
+    .comment .who{font-weight:600}
+
+    /* Right column */
+    .widget h3{margin:0 0 10px; font-size:16px}
+    .trend{display:flex; justify-content:space-between; gap:12px; padding:10px 0; border-bottom:1px dashed var(--line)}
+    .trend:last-child{border-bottom:0}
+    .suggest{display:flex; flex-direction:column; gap:10px}
+    .people{display:flex; align-items:center; gap:10px}
+    .people .pic{width:38px; height:38px; border-radius:10px; background:#181c24; display:grid; place-items:center; font-weight:700}
+    .people .act{margin-left:auto}
+
+    /* Modal */
+    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.45)}
+    .modal .dialog{width:min(560px, 92vw); background:var(--card); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); padding:16px}
+
+    /* Toast */
+    .toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#10141d; border:1px solid var(--line); padding:12px 16px; border-radius:12px; display:none}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav container">
+      <a class="brand" href="#">
+        <div class="logo" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 12C4 7.029 7.582 3 12 3s8 4.029 8 9-3.582 9-8 9-8-4.029-8-9Z" fill="white"/>
+          </svg>
+        </div>
+        <span>RecruitX</span>
+      </a>
+
+      <div class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="search" placeholder="Search people, jobs, posts" autocomplete="off"/>
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-btn" title="Home" id="homeBtn" aria-label="Home">🏠</button>
+        <button class="icon-btn" title="Network" aria-label="My Network">👥</button>
+        <button class="icon-btn" title="Jobs" aria-label="Jobs">💼</button>
+        <button class="icon-btn" title="Messages" aria-label="Messages">💬</button>
+        <button class="icon-btn" title="Notifications" aria-label="Notifications" id="notifBtn">🔔</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="grid container">
+    <!-- Left Sidebar -->
+    <aside class="left">
+      <div class="card pad profile">
+        <div class="cover" aria-hidden="true"></div>
+        <div class="avatar">
+          <div class="img" aria-label="Your avatar">AP</div>
+          <div class="meta">
+            <div class="name">Alin Prajapati</div>
+            <div class="title">Computer Engineer • ML + Web</div>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="num" id="statsViews">1,203</div><div class="lbl">Profile views</div></div>
+          <div class="stat"><div class="num" id="statsConn">512</div><div class="lbl">Connections</div></div>
+          <div class="stat"><div class="num" id="statsPosts">42</div><div class="lbl">Posts</div></div>
+        </div>
+        <div class="divider"></div>
+        <button class="btn primary" id="openComposer">Create Post</button>
+      </div>
+
+      <div class="card pad" style="margin-top:16px">
+        <h3>Shortcuts</h3>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px">
+          <a href="#" class="chip">⭐️ Saved</a>
+          <a href="#" class="chip">🧑‍💻 My Projects</a>
+          <a href="#" class="chip">📄 Resume</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Feed -->
+    <section class="main">
+      <div class="card pad">
+        <div class="composer">
+          <div class="post-avatar" aria-hidden="true">AP</div>
+          <textarea id="composerText" placeholder="Start a post…"></textarea>
+        </div>
+        <div class="composer-actions">
+          <button class="btn ghost" id="attachImg">📷 Image</button>
+          <input id="imgInput" type="file" accept="image/*" hidden>
+          <button class="btn primary" id="postBtn">Post</button>
+        </div>
+      </div>
+
+      <div class="feed" id="feed"></div>
+    </section>
+
+    <!-- Right Sidebar -->
+    <aside class="right">
+      <div class="card pad widget">
+        <h3>Trending Topics</h3>
+        <div class="trend"><span>#AIHiring</span><span>12,4k posts</span></div>
+        <div class="trend"><span>#WebDevIndia</span><span>8,9k posts</span></div>
+        <div class="trend"><span>#OpenSource</span><span>6,3k posts</span></div>
+        <div class="trend"><span>#CareerTips</span><span>5,1k posts</span></div>
+      </div>
+
+      <div class="card pad widget" style="margin-top:16px">
+        <h3>People you may know</h3>
+        <div class="suggest">
+          <div class="people"><div class="pic">VS</div><div>Vishal Shah • Frontend</div><button class="btn act">Connect</button></div>
+          <div class="people"><div class="pic">SS</div><div>Simran Singh • Data</div><button class="btn act">Connect</button></div>
+          <div class="people"><div class="pic">RK</div><div>Ravi Kumar • DevOps</div><button class="btn act">Connect</button></div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Modal: Post details -->
+  <div class="modal" id="postModal" aria-hidden="true" role="dialog">
+    <div class="dialog">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px">
+        <h3 style="margin:0">Create a Post</h3>
+        <button class="icon-btn" id="closeModal" aria-label="Close">✖</button>
+      </div>
+      <div class="divider"></div>
+      <div style="display:flex; gap:12px; align-items:flex-start">
+        <div class="post-avatar">AP</div>
+        <textarea id="modalText" placeholder="Share something valuable…" style="flex:1; min-height:120px; border:1px solid var(--line); background:#0f1218; color:var(--text); border-radius:12px; padding:12px"></textarea>
+      </div>
+      <div class="composer-actions" style="margin-top:12px">
+        <button class="btn ghost" id="modalAttach">📷 Image</button>
+        <input id="modalImgInput" type="file" accept="image/*" hidden>
+        <button class="btn primary" id="modalPost">Post</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ----- Utilities -----
+    const $ = (sel, el=document) => el.querySelector(sel)
+    const $$ = (sel, el=document) => [...el.querySelectorAll(sel)]
+    const toast = (msg) => { const t = $('#toast'); t.textContent = msg; t.style.display='block'; setTimeout(()=> t.style.display='none', 1600) }
+
+    const storageKey = 'RecruitX.posts.v1'
+    const readPosts = () => JSON.parse(localStorage.getItem(storageKey) || '[]')
+    const writePosts = (arr) => localStorage.setItem(storageKey, JSON.stringify(arr))
+
+    const prettyTime = (ts) => {
+      const diff = Math.floor((Date.now()-ts)/1000)
+      if (diff < 60) return `${diff}s`
+      if (diff < 3600) return `${Math.floor(diff/60)}m`
+      if (diff < 86400) return `${Math.floor(diff/3600)}h`
+      const d = new Date(ts)
+      return d.toLocaleDateString()
+    }
+
+    // ----- Feed Rendering -----
+    function renderFeed(){
+      const list = readPosts().sort((a,b)=>b.ts-a.ts)
+      const feed = $('#feed')
+      feed.innerHTML = ''
+
+      if (!list.length){
+        const empty = document.createElement('div')
+        empty.className='card pad'
+        empty.innerHTML = `<div style="text-align:center; color:var(--muted)">No posts yet. Be the first to share something! 🚀</div>`
+        feed.appendChild(empty)
+        return
+      }
+
+      for (const p of list){
+        const card = document.createElement('article')
+        card.className = 'card post'
+        card.setAttribute('data-id', p.id)
+
+        card.innerHTML = `
+          <div class="post-header">
+            <div class="post-avatar">${p.authorInitials || 'AP'}</div>
+            <div class="post-meta">
+              <div class="who">${p.author || 'Alin Prajapati'}</div>
+              <div class="when">${p.role || 'Computer Engineer'} • ${prettyTime(p.ts)}</div>
+            </div>
+            <button class="icon-btn" title="Delete" aria-label="Delete post" data-action="delete">🗑️</button>
+          </div>
+          <div class="post-body">${(p.text || '').replace(/\n/g,'<br>')}</div>
+          ${p.image ? `<div class='post-image'><img alt="Post image" src="${p.image}"/></div>` : ''}
+          <div class="post-actions">
+            <button class="chip" data-action="like">❤️ <span>${p.likes||0}</span></button>
+            <button class="chip" data-action="comment">💬 <span>${(p.comments||[]).length}</span></button>
+            <button class="chip" data-action="share">🔗 Share</button>
+          </div>
+          <div class="comments">
+            <div class="comment">
+              <div class="post-avatar" style="width:32px; height:32px">AP</div>
+              <input class="c-input" placeholder="Write a comment…" style="flex:1; border-radius:10px; border:1px solid var(--line); background:#0f1218; color:var(--text); padding:8px"/>
+              <button class="btn" data-action="add-comment">Post</button>
+            </div>
+            <div class="c-list"></div>
+          </div>
+        `
+        feed.appendChild(card)
+
+        // Render comments
+        const clist = $('.c-list', card)
+        for (const c of (p.comments||[])){
+          const row = document.createElement('div')
+          row.className='comment'
+          row.innerHTML = `<div class="post-avatar" style="width:32px; height:32px">${c.init||'AP'}</div><div><div class="who">${c.by||'You'}</div><div>${c.text}</div></div>`
+          clist.appendChild(row)
+        }
+      }
+    }
+
+    // ----- Create Post (inline composer) -----
+    const composerText = $('#composerText')
+    const postBtn = $('#postBtn')
+    const imgInput = $('#imgInput')
+    const attachImg = $('#attachImg')
+
+    let pendingImageData = ''
+    attachImg.addEventListener('click', ()=> imgInput.click())
+    imgInput.addEventListener('change', handleImage)
+
+    function handleImage(e){
+      const file = e.target.files[0]
+      if (!file) return
+      const reader = new FileReader()
+      reader.onload = () => { pendingImageData = reader.result; toast('Image attached') }
+      reader.readAsDataURL(file)
+    }
+
+    postBtn.addEventListener('click', ()=>{
+      const text = composerText.value.trim()
+      if (!text && !pendingImageData) return toast('Type something or attach an image')
+      const post = { id: crypto.randomUUID(), text, image: pendingImageData, ts: Date.now(), likes:0, comments:[] }
+      const list = readPosts(); list.push(post); writePosts(list)
+      composerText.value=''; pendingImageData=''; imgInput.value=''
+      renderFeed(); toast('Posted!')
+    })
+
+    // ----- Post actions (delegated) -----
+    $('#feed').addEventListener('click', (e)=>{
+      const btn = e.target.closest('button')
+      if (!btn) return
+      const card = e.target.closest('.post')
+      const id = card?.dataset.id
+      if (!id) return
+      const posts = readPosts()
+      const idx = posts.findIndex(p=>p.id===id)
+      if (idx===-1) return
+
+      const action = btn.dataset.action
+      if (action==='like'){
+        posts[idx].likes = (posts[idx].likes||0)+1
+        writePosts(posts); renderFeed()
+      }
+      if (action==='delete'){
+        posts.splice(idx,1); writePosts(posts); renderFeed(); toast('Post deleted')
+      }
+      if (action==='comment'){
+        const box = $('.comments', card); box.style.display = box.style.display==='block' ? 'none' : 'block'
+      }
+      if (action==='add-comment'){
+        const input = $('.c-input', card)
+        const val = input.value.trim()
+        if(!val) return
+        posts[idx].comments = posts[idx].comments || []
+        posts[idx].comments.push({ by:'You', init:'YOU', text: val })
+        writePosts(posts); renderFeed()
+      }
+      if (action==='share'){
+        navigator.clipboard.writeText(location.href + '#post-'+id).then(()=> toast('Link copied'))
+      }
+    })
+
+    // ----- Modal flow (optional composer) -----
+    const postModal = $('#postModal')
+    const openComposer = $('#openComposer')
+    const closeModal = $('#closeModal')
+    const modalText = $('#modalText')
+    const modalPost = $('#modalPost')
+    const modalAttach = $('#modalAttach')
+    const modalImgInput = $('#modalImgInput')
+
+    openComposer.addEventListener('click', ()=>{ postModal.style.display='flex'; modalText.focus() })
+    closeModal.addEventListener('click', ()=>{ postModal.style.display='none' })
+
+    modalAttach.addEventListener('click', ()=> modalImgInput.click())
+    modalImgInput.addEventListener('change', (e)=>{
+      const f = e.target.files[0]; if(!f) return
+      const r = new FileReader(); r.onload = () => { pendingImageData = r.result; toast('Image attached') }; r.readAsDataURL(f)
+    })
+
+    modalPost.addEventListener('click', ()=>{
+      const text = modalText.value.trim()
+      if (!text && !pendingImageData) return toast('Type something or attach an image')
+      const post = { id: crypto.randomUUID(), text, image: pendingImageData, ts: Date.now(), likes:0, comments:[] }
+      const list = readPosts(); list.push(post); writePosts(list)
+      modalText.value=''; pendingImageData=''; modalImgInput.value=''
+      postModal.style.display='none'; renderFeed(); toast('Posted!')
+    })
+
+    // ----- Search demo (filters visible posts by text) -----
+    $('#search').addEventListener('input', (e)=>{
+      const q = e.target.value.toLowerCase()
+      $$('#feed .post').forEach(card=>{
+        const body = $('.post-body', card).innerText.toLowerCase()
+        card.style.display = body.includes(q) ? 'block' : 'none'
+      })
+    })
+
+    // ----- Seed sample posts (first run) -----
+    if (!readPosts().length){
+      writePosts([
+        { id: crypto.randomUUID(), author:'vishva M..', authorInitials:'PN', role:'Frontend Dev', text:'Built a responsive, accessible social-feed UI using vanilla JS. Open-sourced today! 🙌', ts: Date.now()-3600*1000*3, likes:5, comments:[{by:'Vishal', init:'VS', text:'Congrats! 🎉'}] },
+        { id: crypto.randomUUID(), author:'Akshat R.', authorInitials:'RM', role:'Data Scientist', text:'Exploring BERT embeddings for resume ranking. Any tips are welcome!', ts: Date.now()-3600*1000*26, likes:12, comments:[{by:'Simran', init:'SS', text:'Try sentence-transformers!'}] }
+      ])
+    }
+
+    // Initial render
+    renderFeed()
+
+    // Fun: mock notifications
+    $('#notifBtn').addEventListener('click', ()=> toast('No new notifications'))
+
+  </script>
+</body>
+</html>

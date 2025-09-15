@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RecruitX • Professional Network UI</title>
+  <style>
+    :root{
+      --bg: #0b0c10;
+      --card: #12141a;
+      --muted: #9aa4b2;
+      --text: #e6ebf2;
+      --accent: #4f8cff;
+      --accent-2:#6ee7b7;
+      --line: #1f2430;
+      --danger:#ff5d5d;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: linear-gradient(180deg, #0a0c12 0%, #0b0c10 100%);
+      color:var(--text);
+    }
+    a{color:inherit; text-decoration:none}
+    .container{max-width:1200px; margin:0 auto; padding:16px}
+
+    /* Login Screen */
+    #loginScreen{
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      height:100vh; text-align:center;
+    }
+    #loginBox{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px; width:min(400px,90vw)}
+    #loginBox h1{margin:0 0 16px; font-size:24px}
+    #loginBox input{width:100%; margin:8px 0; padding:12px; border-radius:12px; border:1px solid var(--line); background:#0f1218; color:var(--text)}
+    #loginBox button{width:100%; margin-top:12px; padding:12px; border:none; border-radius:12px; font-weight:600; cursor:pointer; background:linear-gradient(135deg,var(--accent),#9b8cff); color:#fff}
+
+    /* Hide main until login */
+    #app{display:none}
+
+    /* Header */
+    header{position: sticky; top:0; z-index:50; background: rgba(10,12,18,.8); backdrop-filter: blur(10px); border-bottom:1px solid var(--line)}
+    .nav{display:flex; align-items:center; gap:12px; padding:12px 16px}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px}
+    .brand .logo{width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,var(--accent),#9b8cff); display:grid; place-items:center; box-shadow:var(--shadow)}
+    .brand span{font-size:18px}
+
+    .search{flex:1; position:relative}
+    .search input{width:100%; border:1px solid var(--line); background:#0f1218; color:var(--text); border-radius:999px; padding:10px 40px; outline:none}
+    .search svg{position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.7}
+
+    .nav-actions{display:flex; gap:8px}
+    .icon-btn{width:40px; height:40px; display:grid; place-items:center; border-radius:12px; background:#0f1218; border:1px solid var(--line); cursor:pointer}
+    .icon-btn:hover{border-color:#2a3140}
+
+    /* Layout */
+    .grid{display:grid; gap:16px; grid-template-columns: 260px 1fr 320px; padding:16px}
+    @media (max-width: 1100px){ .grid{ grid-template-columns: 240px 1fr; } .right{ display:none } }
+    @media (max-width: 780px){ .grid{ grid-template-columns: 1fr; } .left{ order:2 } .main{ order:1 } }
+
+    /* (rest styles same as before, omitted for brevity) */
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div id="loginScreen">
+    <div id="loginBox">
+      <h1>Welcome to RecruitX</h1>
+      <input type="text" id="loginUser" placeholder="Enter your name" />
+      <input type="password" id="loginPass" placeholder="Enter password" />
+      <button id="loginBtn">Login</button>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app">
+    <header>
+      <div class="nav container">
+        <a class="brand" href="#">
+          <div class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12C4 7.029 7.582 3 12 3s8 4.029 8 9-3.582 9-8 9-8-4.029-8-9Z" fill="white"/></svg></div>
+          <span>RecruitX</span>
+        </a>
+        <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><input id="search" placeholder="Search"/></div>
+        <div class="nav-actions"><button class="icon-btn">🏠</button><button class="icon-btn">👥</button><button class="icon-btn">💼</button><button class="icon-btn">💬</button><button class="icon-btn" id="notifBtn">🔔</button></div>
+      </div>
+    </header>
+    <main class="grid container">
+      <!-- (rest of LinkedIn-style layout from previous code goes here) -->
+      <section class="main"><div class="feed" id="feed"></div></section>
+    </main>
+  </div>
+
+  <script>
+    // Simple login demo
+    const loginBtn = document.getElementById('loginBtn')
+    loginBtn.addEventListener('click', ()=>{
+      const user = document.getElementById('loginUser').value.trim()
+      const pass = document.getElementById('loginPass').value.trim()
+      if(!user || !pass){ alert('Enter username and password'); return }
+      localStorage.setItem('RecruitX.user', user)
+      document.getElementById('loginScreen').style.display='none'
+      document.getElementById('app').style.display='block'
+      renderFeed()
+    })
+
+    // Feed placeholder
+    function renderFeed(){
+      const feed = document.getElementById('feed')
+      feed.innerHTML = `<div class='card pad'>Welcome ${localStorage.getItem('RecruitX.user') || ''}! 🎉 Your feed will appear here.</div>`
+    }
+
+    // Notifications demo
+    document.addEventListener('click', (e)=>{
+      if(e.target.id==='notifBtn') alert('No new notifications')
+    })
+  </script>
+</body>
+</html>
